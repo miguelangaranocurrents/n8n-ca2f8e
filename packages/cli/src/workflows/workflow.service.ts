@@ -625,7 +625,6 @@ export class WorkflowService {
 		// check credentials for old format - scope to the workflow's owner project
 		const ownerProject = await this.ownershipService.getWorkflowProjectCached(workflowId);
 		await WorkflowHelpers.replaceInvalidCredentials(workflowUpdateData, ownerProject.id);
-		console.log('DIAG_SAVE', workflowId, JSON.stringify((workflowUpdateData.nodes ?? []).map((n) => [n.name, n.credentials])));
 
 		// Central credential guard for every workflow write path. With sharing
 		// enabled, reject new nodes that reference credentials the acting user
