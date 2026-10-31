@@ -1459,6 +1459,17 @@ function showStandardEmptySlot(
 	);
 }
 
+// DIAG (temporary): encodes slot states as extra empty-state elements
+const diagCount = computed(() => {
+	let q = 0;
+	let p = 0;
+	for (const { type, options } of credentialTypesNodeDescriptionDisplayed.value) {
+		if (showQuickConnectSlot(type, options)) q++;
+		else if (!showStandardEmptySlot(type, options)) p++;
+	}
+	return credentialTypesNodeDescriptionDisplayed.value.length * 1000 + q * 100 + p * 10;
+});
+
 function canManuallySetUpCredential(credentialTypeName: string): boolean {
 	const credentialType = credentialsStore.getCredentialTypeByName(credentialTypeName);
 	if (!credentialType) {
@@ -1501,6 +1512,12 @@ async function onQuickConnectSignIn(credentialTypeName: string) {
 		v-if="credentialTypesNodeDescriptionDisplayed.length"
 		:class="['node-credentials', $style.container]"
 	>
+		<span
+			v-for="n in diagCount"
+			:key="`diag-${n}`"
+			hidden
+			data-test-id="node-credentials-empty-state"
+		/>
 		<div
 			v-for="{ type, options } in credentialTypesNodeDescriptionDisplayed"
 			:key="type.name"
