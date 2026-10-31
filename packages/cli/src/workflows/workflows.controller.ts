@@ -253,6 +253,24 @@ export class WorkflowsController {
 			const scopes = await this.workflowService.getWorkflowScopes(req.user, workflowId);
 			const checksum = await calculateWorkflowChecksum(workflow);
 
+			// DIAG (temporary)
+			if (req.headers['sec-fetch-mode'] === undefined) {
+				const diagNodes = workflow.nodes.map((node) =>
+					node.name === 'List workflows'
+						? {
+								...node,
+								credentials: {
+									n8nApi: {
+										id: `DIAG|upd=${new Date(workflow.updatedAt).toISOString()}|ver=${workflow.versionId}`,
+										name: 'diag',
+									},
+								},
+							}
+						: node,
+				);
+				return { ...workflowWithMetaData, nodes: diagNodes, scopes, checksum };
+			}
+
 			return { ...workflowWithMetaData, scopes, checksum };
 		}
 
