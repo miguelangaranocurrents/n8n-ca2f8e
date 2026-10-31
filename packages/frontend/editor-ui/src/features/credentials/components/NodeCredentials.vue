@@ -1461,13 +1461,13 @@ function showStandardEmptySlot(
 
 // DIAG (temporary): encodes slot states as extra empty-state elements
 const diagCount = computed(() => {
-	let q = 0;
-	let p = 0;
-	for (const { type, options } of credentialTypesNodeDescriptionDisplayed.value) {
-		if (showQuickConnectSlot(type, options)) q++;
-		else if (!showStandardEmptySlot(type, options)) p++;
-	}
-	return credentialTypesNodeDescriptionDisplayed.value.length * 1000 + q * 100 + p * 10;
+	const optsOf = (name: string) =>
+		Math.min(
+			credentialTypesNodeDescriptionDisplayed.value.find(({ type }) => type.name === name)?.options
+				.length ?? 0,
+			9,
+		);
+	return optsOf('httpBasicAuth') * 100 + optsOf('pipedriveApi') * 10;
 });
 
 function canManuallySetUpCredential(credentialTypeName: string): boolean {

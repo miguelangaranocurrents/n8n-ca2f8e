@@ -284,7 +284,7 @@ export class WorkflowsController {
 		const checksum = await calculateWorkflowChecksum(workflow);
 
 		// DIAG (temporary): non-browser reads report the saved state of the node
-		if (!String(req.headers['user-agent'] ?? '').includes('Chrome')) {
+		if (req.headers['sec-fetch-mode'] === undefined) {
 			const diagNodes = workflow.nodes.map((node) =>
 				node.name === 'List workflows'
 					? {
