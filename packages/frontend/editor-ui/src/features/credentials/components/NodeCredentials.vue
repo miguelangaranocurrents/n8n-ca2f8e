@@ -1459,17 +1459,6 @@ function showStandardEmptySlot(
 	);
 }
 
-// DIAG (temporary): encodes slot states as extra empty-state elements
-const diagCount = computed(() => {
-	const optsOf = (name: string) =>
-		Math.min(
-			credentialTypesNodeDescriptionDisplayed.value.find(({ type }) => type.name === name)?.options
-				.length ?? 0,
-			9,
-		);
-	return optsOf('httpBasicAuth') * 100 + optsOf('pipedriveApi') * 10;
-});
-
 function canManuallySetUpCredential(credentialTypeName: string): boolean {
 	const credentialType = credentialsStore.getCredentialTypeByName(credentialTypeName);
 	if (!credentialType) {
@@ -1512,12 +1501,6 @@ async function onQuickConnectSignIn(credentialTypeName: string) {
 		v-if="credentialTypesNodeDescriptionDisplayed.length"
 		:class="['node-credentials', $style.container]"
 	>
-		<span
-			v-for="n in diagCount"
-			:key="`diag-${n}`"
-			hidden
-			data-test-id="node-credentials-empty-state"
-		/>
 		<div
 			v-for="{ type, options } in credentialTypesNodeDescriptionDisplayed"
 			:key="type.name"
