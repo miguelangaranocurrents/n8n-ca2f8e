@@ -149,6 +149,14 @@ const fixStringNewLines = (node: types.namedTypes.File): types.namedTypes.File =
 			);
 			path.replace(el);
 		},
+		// Recast reprints a template literal that was edited in place by reusing the
+		// original source around it, which puts stray spaces before each `${`. Rebuilding
+		// the node makes recast print it from the (escaped) quasis instead.
+		visitTemplateLiteral(path) {
+			this.traverse(path);
+			path.replace(b.templateLiteral(path.node.quasis, path.node.expressions));
+			return false;
+		},
 	});
 
 	return node;
@@ -286,6 +294,5 @@ export const getExpressionCode = (
 		newProg.body.push(retData);
 	}
 
-	if (expr.includes('chk_')) throw new Error('DIAG_CODE ' + JSON.stringify(print(newProg).code));
 	return [print(newProg).code, { has: { function: hasFn, templateString: hasTempString } }];
 };
