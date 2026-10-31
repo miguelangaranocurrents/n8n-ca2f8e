@@ -286,5 +286,6 @@ export const getExpressionCode = (
 		newProg.body.push(retData);
 	}
 
+	if (expr.includes('chk_')) console.log('DIAG_CODE', JSON.stringify(print(newProg).code));
 	return [print(newProg).code, { has: { function: hasFn, templateString: hasTempString } }];
 };

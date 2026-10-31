@@ -206,6 +206,7 @@ export const validateEntry = (
 	}
 
 	const newValue = validationResult.newValue;
+	if (name === 'checkId') console.log('DIAG_SET', JSON.stringify(validationResult));
 
 	// v3.5+ serializes values to JSON-safe form so output never carries live
 	// Luxon DateTime objects (dateTime fields) or nested dates inside objects/arrays
